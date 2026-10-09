@@ -1,678 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Condo Games</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    min-height: 100vh;
-    color: white;
-    background:
-        radial-gradient(circle at 20% 20%, #382080 0%, transparent 35%),
-        radial-gradient(circle at 80% 80%, #0066ff 0%, transparent 30%),
-        #050510;
-    overflow-x: hidden;
-}
-
-/* Animated grid */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-    background-size: 45px 45px;
-    animation: gridMove 15s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes gridMove {
-    from {
-        transform: translateY(0);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNIVERSITY BEAM</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    to {
-        transform: translateY(45px);
-    }
-}
-
-/* Floating particles */
-.particle {
-    position: fixed;
-    width: 4px;
-    height: 4px;
-    background: white;
-    border-radius: 50%;
-    opacity: .35;
-    animation: float 8s infinite ease-in-out;
-    pointer-events: none;
-}
-
-.p1 {
-    left: 10%;
-    top: 80%;
-}
-
-.p2 {
-    left: 25%;
-    top: 20%;
-    animation-delay: 2s;
-}
-
-.p3 {
-    left: 70%;
-    top: 70%;
-    animation-delay: 1s;
-}
-
-.p4 {
-    left: 85%;
-    top: 25%;
-    animation-delay: 3s;
-}
-
-.p5 {
-    left: 50%;
-    top: 90%;
-    animation-delay: 4s;
-}
-
-@keyframes float {
-    0%,100% {
-        transform: translateY(0) scale(1);
-        opacity: .2;
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at center, #0a0a12 0%, #030308 70%);
+      color: #fff;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
     }
 
-    50% {
-        transform: translateY(-80px) scale(1.8);
-        opacity: .8;
-    }
-}
-
-/* Header */
-header {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding: 70px 20px 35px;
-}
-
-.logo {
-    display: inline-block;
-    font-size: 15px;
-    letter-spacing: 5px;
-    color: #9fa8ff;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-}
-
-h1 {
-    font-size: clamp(40px, 8vw, 76px);
-    font-weight: 900;
-    letter-spacing: -3px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #ffffff,
-            #9f8cff,
-            #55bfff,
-            #ffffff
-        );
-
-    background-size: 300%;
-
-    -webkit-background-clip: text;
-    color: transparent;
-
-    animation: gradientText 5s linear infinite;
-}
-
-@keyframes gradientText {
-    0% {
-        background-position: 0%;
+    /* Soft vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+      pointer-events: none;
+      z-index: 1;
     }
 
-    100% {
-        background-position: 300%;
-    }
-}
-
-.subtitle {
-    color: #a9aac0;
-    margin-top: 15px;
-    font-size: 16px;
-}
-
-/* Game grid */
-.games {
-    position: relative;
-    z-index: 2;
-
-    max-width: 1200px;
-    margin: 40px auto 80px;
-
-    padding: 0 25px;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-}
-
-/* Game card */
-.game-card {
-    position: relative;
-
-    min-height: 430px;
-
-    border-radius: 25px;
-
-    overflow: hidden;
-
-    background: rgba(255,255,255,.06);
-
-    border: 1px solid rgba(255,255,255,.12);
-
-    backdrop-filter: blur(15px);
-
-    transition:
-        .5s cubic-bezier(.2,.8,.2,1);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.3);
-}
-
-.game-card:hover {
-    transform:
-        translateY(-15px)
-        scale(1.02);
-
-    border-color:
-        rgba(140,130,255,.7);
-
-    box-shadow:
-        0 25px 70px rgba(76,55,255,.25),
-        0 0 30px rgba(100,100,255,.12);
-}
-
-/* Game image */
-.game-image {
-    height: 220px;
-
-    position: relative;
-
-    overflow: hidden;
-}
-
-.game-image::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            transparent 30%,
-            rgba(5,5,16,.95) 100%
-        );
-}
-
-.game1 {
-    background:
-        linear-gradient(
-            135deg,
-            #5225ff,
-            #0c9dff
-        );
-}
-
-.game2 {
-    background:
-        linear-gradient(
-            135deg,
-            #ff245e,
-            #7b20ff
-        );
-}
-
-.game3 {
-    background:
-        linear-gradient(
-            135deg,
-            #00b894,
-            #0066ff
-        );
-}
-
-/* Number placeholder */
-.placeholder {
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    font-size: 70px;
-    font-weight: 900;
-
-    opacity: .2;
-}
-
-/* Card content */
-.content {
-    padding: 5px 25px 25px;
-
-    position: relative;
-
-    z-index: 2;
-
-    margin-top: -5px;
-}
-
-.tag {
-    display: inline-block;
-
-    font-size: 11px;
-
-    color: #c7c4ff;
-
-    background:
-        rgba(110,90,255,.18);
-
-    border:
-        1px solid rgba(130,120,255,.25);
-
-    padding: 6px 10px;
-
-    border-radius: 20px;
-
-    margin-bottom: 12px;
-}
-
-h2 {
-    font-size: 25px;
-
-    margin-bottom: 8px;
-}
-
-.description {
-    color: #a7a7b8;
-
-    font-size: 14px;
-
-    line-height: 1.5;
-
-    min-height: 43px;
-}
-
-/* Play button */
-.play-btn {
-    width: 100%;
-
-    border: none;
-
-    margin-top: 20px;
-
-    padding: 14px;
-
-    border-radius: 13px;
-
-    color: white;
-
-    font-weight: bold;
-
-    font-size: 15px;
-
-    cursor: pointer;
-
-    background:
-        linear-gradient(
-            90deg,
-            #6547ff,
-            #268cff
-        );
-
-    box-shadow:
-        0 8px 25px rgba(70,80,255,.25);
-
-    transition: .3s;
-}
-
-.play-btn:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 12px 35px rgba(70,80,255,.45);
-}
-
-.play-btn:active {
-    transform: scale(.97);
-}
-
-/* Footer */
-footer {
-    position: relative;
-
-    z-index: 2;
-
-    text-align: center;
-
-    padding: 25px;
-
-    color: #66677b;
-
-    font-size: 13px;
-}
-
-/* Loading screen */
-#loadingScreen {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 9999;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-direction: column;
-
-    background:
-        radial-gradient(
-            circle at center,
-            #17134c,
-            #03030b 65%
-        );
-}
-
-/* Loading title */
-.loader-logo {
-    font-size: 38px;
-
-    font-weight: 900;
-
-    margin-bottom: 30px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #ffffff,
-            #8c7cff,
-            #42aaff
-        );
-
-    -webkit-background-clip: text;
-
-    color: transparent;
-
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0%,100% {
-        transform: scale(1);
-
-        opacity: .7;
+    /* Particle canvas */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    50% {
-        transform: scale(1.08);
+    /* Title */
+    .title {
+      position: relative;
+      z-index: 2;
+      margin-top: 2.6rem;
+      margin-bottom: 3.2rem;
+      font-size: clamp(1.9rem, 5.5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      text-align: center;
+      background: linear-gradient(90deg, #ffffff, #e0e0e0, #a0a0a0, #ffffff);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shine 5s linear infinite, float 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 18px rgba(255,255,255,0.25));
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: shine 5s linear infinite, float 6s ease-in-out infinite, fadeInUp 1.2s ease forwards;
+    }
 
+    @keyframes shine {
+      to { background-position: 300% center; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes fadeInUp {
+      to {
         opacity: 1;
-    }
-}
-
-/* Loading circle */
-.loader-ring {
-    width: 65px;
-
-    height: 65px;
-
-    border:
-        4px solid
-        rgba(255,255,255,.1);
-
-    border-top-color: #7d6cff;
-
-    border-right-color: #31a5ff;
-
-    border-radius: 50%;
-
-    animation:
-        spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Loading text */
-.loading-text {
-    margin-top: 25px;
-
-    color: #aaaabd;
-
-    font-size: 14px;
-}
-
-/* Progress bar */
-.progress {
-    width: 240px;
-
-    height: 5px;
-
-    margin-top: 15px;
-
-    background:
-        rgba(255,255,255,.1);
-
-    border-radius: 20px;
-
-    overflow: hidden;
-}
-
-.progress-bar {
-    width: 0%;
-
-    height: 100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #765cff,
-            #35a8ff
-        );
-
-    animation:
-        progress 2.5s linear forwards;
-}
-
-@keyframes progress {
-    to {
-        width: 100%;
-    }
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-
-    .games {
-        grid-template-columns: 1fr;
-
-        max-width: 550px;
+        transform: translateY(0);
+      }
     }
 
-    .game-card {
-        min-height: 410px;
-    }
-}
-
-@media (max-width: 500px) {
-
-    header {
-        padding-top: 50px;
-    }
-
-    h1 {
-        font-size: 42px;
+    /* Links container */
+    .links {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: min(85%, 270px);
     }
 
-    .games {
-        padding: 0 15px;
+    .link-btn {
+      display: block;
+      padding: 0.78rem 1.2rem;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(18px);
     }
-}
-</style>
+
+    /* Staggered entrance */
+    .link-btn:nth-child(1) { animation: fadeInUp 0.8s 0.3s ease forwards; }
+    .link-btn:nth-child(2) { animation: fadeInUp 0.8s 0.45s ease forwards; }
+    .link-btn:nth-child(3) { animation: fadeInUp 0.8s 0.6s ease forwards; }
+    .link-btn:nth-child(4) { animation: fadeInUp 0.8s 0.75s ease forwards; }
+
+    .link-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%);
+      transform: translateX(-120%);
+      transition: transform 0.6s ease;
+    }
+
+    .link-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 
+        0 0 25px rgba(255, 255, 255, 0.18),
+        0 8px 30px rgba(0,0,0,0.35);
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .link-btn:hover::before {
+      transform: translateX(120%);
+    }
+
+    .link-btn:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    /* Loading overlay */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #030308;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    #loader.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 1.3rem;
+      box-shadow: 0 0 20px rgba(255,255,255,0.15);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      color: rgba(255, 255, 255, 0.65);
+      text-transform: uppercase;
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- Floating particles -->
-<div class="particle p1"></div>
-<div class="particle p2"></div>
-<div class="particle p3"></div>
-<div class="particle p4"></div>
-<div class="particle p5"></div>
+  <canvas id="particles"></canvas>
 
+  <h1 class="title">UNIVERSITY BEAM</h1>
 
-<!-- Loading Screen -->
-<div id="loadingScreen">
+  <div class="links">
+    <!-- Edit these -->
+    <a href="https://immortal.st/?code=MzY4ODE3MjU5MQ==" class="link-btn" data-url="https://immortal.st/?code=MzY4ODE3MjU5MQ==">MAIN SITE</a>
+    <a href="https://shockify.st/?code=MzY4ODE3MjU5MQ==" class="link-btn" data-url="https://shockify.st/?code=MzY4ODE3MjU5MQ==">Shockify</a>
+    <a href="https://app.beamers.si/u/UniversitySkill" class="link-btn" data-url="https://app.beamers.si/u/UniversitySkill">Splunk</a>
+  
 
-    <div class="loader-logo">
-        CONDO GAMES
-    </div>
+  <div id="loader">
+    <div class="spinner"></div>
+    <div class="loader-text">Loading</div>
+  </div>
 
-    <div class="loader-ring"></div>
+  <script>
+    // ========== Enhanced Particle System ==========
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const particleCount = 110;
+    const connectionDistance = 130;
 
-    <div
-        class="loading-text"
-        id="loadingText">
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-        Loading game...
+    class Particle {
+      constructor() {
+        this.reset(true);
+      }
+      reset(initial = false) {
+        this.x = Math.random() * canvas.width;
+        this.y = initial ? Math.random() * canvas.height : canvas.height + 20;
+        this.size = Math.random() * 2.4 + 0.5;
+        this.speedY = Math.random() * 0.55 + 0.12;
+        this.speedX = (Math.random() - 0.5) * 0.35;
+        this.opacity = Math.random() * 0.55 + 0.25;
+        this.pulse = Math.random() * Math.PI * 2;
+        this.pulseSpeed = 0.02 + Math.random() * 0.025;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        this.pulse += this.pulseSpeed;
+        if (this.y < -20) this.reset();
+      }
+      draw() {
+        const glow = Math.sin(this.pulse) * 0.35 + 0.65;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * glow})`;
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
 
-    </div>
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
 
-    <div class="progress">
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-        <div class="progress-bar"></div>
+          if (dist < connectionDistance) {
+            const opacity = (1 - dist / connectionDistance) * 0.18;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
+          }
+        }
+      }
+    }
 
-    </div>
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-</div>
+      // Soft radial glow in center
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 0,
+        canvas.width / 2, canvas.height / 2, canvas.width * 0.6
+      );
+      gradient.addColorStop(0, 'rgba(255,255,255,0.03)');
+      gradient.addColorStop(1, 'transparent');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
 
-<!-- Main Header -->
-<header>
+      drawConnections();
+      requestAnimationFrame(animate);
+    }
+    animate();
 
-    <div class="logo">
-        WELCOME TO
-    </div>
+    // ========== Loading + Navigation ==========
+    const loader = document.getElementById('loader');
+    const buttons = document.querySelectorAll('.link-btn');
 
-    <h1>
-        CONDO GAMES
-    </h1>
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = btn.getAttribute('data-url') || btn.href;
 
-    <p class="subtitle">
-        Choose a game and start playing.
-    </p>
+        loader.classList.add('active');
 
-</header>
-
-
-<!-- Games -->
-<main class="games">
-
-
-    <!-- GAME 1 -->
-
-    <div class="game-card">
-
-        <div class="game-image game1">
-
-            <div class="placeholder">
-                01
-            </div>
-
-        </div>
-
-        <div class="content">
-
-            <span class="tag">
-                GAME 01
-            </span>
-
-            <h2>
-                ETFB But You An Hacker
-            </h2>
-
-            <p class="description">
-                Jump into ETFB as a hacker and take over the game.
-            </p>
-
-            <button
-                class="play-btn"
-                onclick="
-                    launchGame(
-                        'ETFB But You An Hacker',
-                        'https://roblox.com.bz/games/111744299662364/ETFB-But-You-An-Hacker?privateServerLinkCode=38924127377513873488199247090150'
-                    )
-                ">
-
-                ▶ PLAY GAME
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- GAME 2 -->
-
-    <div class="game-card">
-
-        <div class="game-image game2">
-
-            <div class="placeholder">
-                02
-            </div>
-
-        </div>
-
-        <div class="content">
-
-            <span class="tag">
-                GAME 02
-            </span>
-
-            <h2>
-                X5 New Word The Best Game
-            </h2>
-
-            <p class="description">
-                Experience the new word edition of X5 — the best game around.
-            </p>
-
-            <button
-                class="play-btn"
-                onclick="
-                    launchGame(
+        setTimeout(() => {
+          window.location.href = url;
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>(
                         'X5 New Word The Best Game',
                         'https://roblox.com.bz/games/102919673732823/X5-New-word-The-Best-Game?privateServerLinkCode=38924127377513873488199247090150'
                     )
